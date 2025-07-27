@@ -9,24 +9,18 @@ function App() {
   const handleDragEnd = () => {
     if (x.get() >= 100) {
       window.open("https://www.genainetworks.in", "_blank");
-
-      // Trigger reset after delay
-      setTimeout(() => {
-        setReset(true);
-      }, 800); // Wait before resetting
+      setTimeout(() => setReset(true), 800); // Wait before resetting
     } else {
-      // Animate back to 0 if not completed
       animate(x, 0, { type: "spring", stiffness: 300 });
     }
   };
 
-  // Reset x motion value when reset state is true
   useEffect(() => {
     if (reset) {
       animate(x, 0, {
         type: "spring",
         stiffness: 300,
-        onComplete: () => setReset(false), // clear reset
+        onComplete: () => setReset(false),
       });
     }
   }, [reset, x]);
@@ -34,8 +28,7 @@ function App() {
   const gradient = "linear-gradient(to right, #8f00ff, #3b1e85, #001f3f)";
 
   return (
-   <div className="flex flex-col items-center justify-center min-h-screen bg-black space-y-12">
-
+    <div className="w-screen h-screen overflow-hidden fixed top-0 left-0 bg-black flex flex-col items-center justify-center space-y-12">
       {/* Main Logo */}
       <img
         src="/logo.png"

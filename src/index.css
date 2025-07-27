@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;      /* 🔒 Prevent scrolling */
+  touch-action: none;    /* 🚫 Prevent gestures/zoom (optional) */
   font-family: sans-serif;
 }
