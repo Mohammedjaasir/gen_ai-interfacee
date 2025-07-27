@@ -1,67 +1,80 @@
-import { useState } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, useMotionValue, animate } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 function App() {
   const x = useMotionValue(0);
-  const [completed, setCompleted] = useState(false);
+  const [reset, setReset] = useState(false);
 
   const handleDragEnd = () => {
-    if (x.get() >= 180) {
-      setCompleted(true);
-      window.open("https://www.google.com", "_blank");
+    if (x.get() >= 100) {
+      window.open("https://www.genainetworks.in", "_blank");
+
+      // Trigger reset after delay
+      setTimeout(() => {
+        setReset(true);
+      }, 800); // Wait before resetting
+    } else {
+      // Animate back to 0 if not completed
+      animate(x, 0, { type: "spring", stiffness: 300 });
     }
   };
 
-  const gradient = useTransform(
-    x,
-    [0, 180],
-    [
-      "linear-gradient(to right, #7F00FF, #E100FF)",
-      "linear-gradient(to right, #00c6ff, #0072ff)",
-    ]
-  );
+  // Reset x motion value when reset state is true
+  useEffect(() => {
+    if (reset) {
+      animate(x, 0, {
+        type: "spring",
+        stiffness: 300,
+        onComplete: () => setReset(false), // clear reset
+      });
+    }
+  }, [reset, x]);
+
+  const gradient = "linear-gradient(to right, #8f00ff, #3b1e85, #001f3f)";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white space-y-12">
-      {/* Logo at Top */}
+   <div className="flex flex-col items-center justify-center min-h-screen bg-black space-y-12">
+
+      {/* Main Logo */}
       <img
         src="/logo.png"
         alt="Main Logo"
-        className="h-44 w-44 object-contain animate-pulse"
+        className="h-60 w-60 object-contain animate-pulse"
       />
 
-      {/* Slide Button */}
-      <motion.div
-        className="relative h-14 w-[270px] rounded-full flex items-center justify-between overflow-hidden shadow-lg"
+      {/* Slide Bar */}
+      <div
+        className="relative w-[220px] h-12 rounded-full flex items-center px-2 overflow-hidden"
         style={{ background: gradient }}
       >
-        {/* Drag Arrow */}
+        {/* Slide Text */}
+        <div className="absolute inset-0 flex items-center justify-center z-0 pr-1">
+          <span className="text-white text-sm font-medium tracking-wide">
+            Slide to Google
+          </span>
+        </div>
+
+        {/* Draggable Arrow */}
         <motion.div
           style={{ x }}
           drag="x"
-          dragConstraints={{ left: 0, right: 180 }}
+          dragConstraints={{ left: 0, right: 100 }}
           onDragEnd={handleDragEnd}
-          className="absolute z-10 h-14 w-14 flex items-center justify-center rounded-full bg-white"
+          className="z-10 h-10 w-10 flex items-center justify-center rounded-full bg-[#1a1a1a] shadow-md"
         >
-          <ArrowRight className="text-black w-6 h-6" />
+          <ArrowRight className="text-white w-4 h-4" />
         </motion.div>
 
-        {/* Text */}
-        <div className="text-white text-sm ml-auto mr-5">
-          Slide to open Google
+        {/* Google Logo */}
+        <div className="ml-auto mr-[-20px] z-10">
+          <img
+            src="/image.png"
+            alt="Google"
+            className="w-20 h-20 rounded-full object-cover shadow-sm"
+          />
         </div>
-
-        {/* Google Logo - High quality, cross-browser-safe */}
-      <img
-  src="/image.png"
-  alt="Google"
-  className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-/>
-
-
-
-      </motion.div>
+      </div>
     </div>
   );
 }
